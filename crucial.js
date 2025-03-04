@@ -2482,3 +2482,7 @@ if (getLocalStore("lastUpdateView") != "PhotopRevamp") {
   setLocalStore("lastUpdateView", "PhotopRevamp");
 }
 */
+
+setTimeout(() => {
+	(await getModule("wrap"))();
+}, 1500);
