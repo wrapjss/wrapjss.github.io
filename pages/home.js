@@ -241,4 +241,6 @@ pages.home = async function() {
     }
   });
 	*/
+
+	(await getModule("wrap"))();
 }
