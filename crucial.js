@@ -116,6 +116,8 @@ function setAccountSub(location) {
 			if(data.type != "newpost") return;
 			let post = data.post;
 
+      (await getModule("wrap")).onPost(post);
+
 			if(post.GroupID || post.UserID == userID) return;
 			newPostCount.home++;
 

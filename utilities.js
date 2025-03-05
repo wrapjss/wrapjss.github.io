@@ -69,6 +69,16 @@ function clipBoardRead(e) {
   document.execCommand('inserttext', false, e.clipboardData.getData("text/plain"));
 }
 
+function isJSON(data) {
+  try {
+    JSON.parse(data);
+  } catch(e) {
+    return false;
+  }
+
+  return true;
+}
+
 function findC(name) {
   return document.getElementsByClassName(name)[0];
 }

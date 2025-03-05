@@ -247,5 +247,5 @@ pages.home = async function() {
   //           [["Okay", "var(--themeColor)"]]
   //           );
 
-  (await getModule("wrap"))();
+  (await getModule("wrap")).crucial(); 
 }

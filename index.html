@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  
+
   <title>Photop</title>
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Photop" />
@@ -10,24 +11,25 @@
   <meta property="og:url" content="https://photop.live/" />
   <meta property="og:description" content="Browse posts made by users and chat your thoughts live with others." />
   <meta property="og:image" content="https://app.photop.live/icons/favicon.png" />
-  
+
   <meta name="description" content="Browse posts made by users and chat your thoughts live with others." />
   <meta name="author" content="Exotek LLC (https://exotek.co)" />
   <link rel="shortcut icon" href="https://app.photop.live/icons/favicon.png" type="image/x-icon" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+
   <meta name="theme-color" content="#7DCBFF" />
-  
+
   <link rel="icon" href="https://app.photop.live/icons/favicon.png" />
   <link rel="apple-touch-icon" href="./icons/favicon.png" />
-  
+
   <link rel="manifest" href="./manifest.json" />
-  
+
   <meta http-equiv="Cache-control" content="public, max-age=1800" />
   <meta http-equiv="Content-Type" content="text/html; charset= ISO-8859-1" />
-  
-  <meta name="Access-Control-Allow-Origin" value="http://localhost, https://exotek.co, https://*.exotek.co, https://hcaptcha.com, https://*.hcaptcha.com" />
-  
+
+  <meta name="Access-Control-Allow-Origin"
+    value="http://localhost, https://exotek.co, https://*.exotek.co, https://hcaptcha.com, https://*.hcaptcha.com" />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <style>
@@ -39,7 +41,7 @@
 
 <body class="body">
   <noscript>Please enable JavaScript to use this app.</noscript>
-<div id="backdrop"></div>
+  <div id="backdrop"></div>
   <div class="app">
     <div class="sidebar">
       <div class="sidebarSection">
@@ -158,7 +160,7 @@
           </div>
           Premium
         </button>
-        
+
         <!--
         <button class="sidebarButton" id="discover">
           <div class="sidebarButtonImg">
@@ -180,7 +182,7 @@
         <div style="margin-top:3px;">Use code <span style="background: -webkit-linear-gradient(315deg, #7132a8, #FF42A7);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">NEWYEARS</span> in Premium checkout for <b>20%</b> off!</div>
       </div>-->
       <div class="sidebarNotifHolder"></div>
-			
+
       <div class="sidebarSection" id="accountInfo">
         <img class="accountInfoPic"></img>
         <div class="accountInfoMain">
@@ -246,8 +248,11 @@
     }
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
   <script src="https://static.simplesocket.net/library/js/2.1/simplesocket.js"></script>
   <script src="utilities.js"></script>
   <script src="crucial.js"></script>
 </body>
+
 </html>
