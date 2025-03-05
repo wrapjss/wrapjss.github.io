@@ -63,7 +63,7 @@ modules.wrap.onPost = async (post) => {
     } else {
       const notif_ = new Notification(`${author.User} (Photop)`, {
         icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
-        body: `${post?.Text || "Error, the post only has an image or poll but no text."}`,
+        body: `${post?.Text || null}`,
         image: `https://photop-content.s3.amazonaws.com/PostImages/${post?._id}0`
       });
     }
