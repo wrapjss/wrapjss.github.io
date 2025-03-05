@@ -59,10 +59,6 @@ modules.wrap.onPost = async (post) => {
       body: `${post?.Text || "yay"}`
     });
 
-    notif_.onclick = () => {
-      document.querySelector(".newPostUsername").innerText = `${document.querySelector(".newPostUsername").innerText} but real`
-    }
-
     console.log(notif_);
   }
 }
