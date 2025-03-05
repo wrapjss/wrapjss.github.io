@@ -54,10 +54,18 @@ modules.wrap.onPost = async (post) => {
   console.log(post);
 
   if (document.hidden && Notification.permission == "granted") {
-    const notif_ = new Notification(`${author.User} (Photop)`, {
-      icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "idk"}`,
-      body: `${post?.Text || "yay"}`
-    });
+    if (!post.Media) {
+      const notif_ = new Notification(`${author.User} (Photop)`, {
+        icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
+        body: `${post?.Text || "Error, the post only has an image or poll but no text."}`
+      });
+    } else {
+      const notif_ = new Notification(`${author.User} (Photop)`, {
+        icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
+        body: `${post?.Text || "Error, the post only has an image or poll but no text."}`,
+        image: `https://photop-content.s3.amazonaws.com/PostImages/${post?._id}0`
+      });
+    }
 
     console.log(notif_);
   }
