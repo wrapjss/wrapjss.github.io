@@ -54,6 +54,7 @@ modules.wrap.onPost = async (post) => {
   console.log(post);
 
   if (document.hidden && Notification.permission == "granted") {
+    // indio comi shorta indio come- *gets cut off by aggresive phonk beat*
     if (!post.Media) {
       const notif_ = new Notification(`${author.User} (Photop)`, {
         icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
