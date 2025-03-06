@@ -28,6 +28,10 @@ html {
   overflow-y: scroll;
 }
 
+#callbtn {
+  color: var(--mentionColor);
+}
+
 .body {
   background: var(--pageColor);
   background-color: var(--pageColor2);

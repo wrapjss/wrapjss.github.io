@@ -83,6 +83,73 @@ modules.wrap.crucial = async () => {
   //     }
   //   }
   // });
+
+  window.callModalOpen = false;
+
+  sidebarButtons.addEventListener("click", async (e) => {
+    let path = e.path || (e.composedPath && e.composedPath());
+    let button = path[0].closest(".sidebarButton");
+
+    const callWireframe = `
+    <input class="searchUserInput" placeholder="Search for a user" id="searchUserInput"></div>
+    <div id="searchResults"></div>
+    `;
+
+    if (button != null) {
+      if (button.innerText == "Call" && !window.callModalOpen) {
+        window.callModalOpen = true;
+        await sleep(250);
+        setPage("home");
+        let modalID = showPopUp(
+          "Make a Call",
+          callWireframe,
+          [["Start", "var(--themeColor)"], ["Cancel", "var(--grayColor)"]]
+        );
+
+        findI("searchResults").id = "searchResults" + modalID;
+        findI("searchUserInput").id = "searchUserInput" + modalID;
+        let searchResults = findI("searchResults" + modalID);
+        let startButton = findI("modalButtons" + modalID).children[0];
+
+        startButton.hidden = true;
+        let selectedUsersMsg = [];
+
+        tempListen(findI("searchUserInput" + modalID), "input", async function (e) {
+          // if (e.key == "Enter") {
+          let searchTerm = findI("searchUserInput" + modalID).value;
+          searchResults.innerHTML = `<div class="loading"></div>`;
+          startButton.style.display = "none";
+          let [code, response] = await sendRequest("GET", `user/search?term=${searchTerm}&amount=10`);
+          response = JSON.parse(response);
+          if (code == 200) {
+            if (response.length == 0) {
+              searchResults.innerText = `We couldn't find anyone named "${searchTerm}".`;
+            } else {
+              searchResults.innerHTML = "";
+            }
+            response.forEach((user) => {
+              let thisUser = createElement("newMessageUser", "div", searchResults);
+              thisUser.id = user._id;
+              thisUser.innerHTML = `<div class="newMessagePfp" style="background-image: url('${decideProfilePic(user)}')"></div><div class="newMessageUserInfo">${getRoleHTML(user)}<span class="newMessageUsername">${user.User}</span></div>`;
+              tempListen(thisUser, "click", function () {
+                if (selectedUsersMsg[thisUser.id]) {
+                  delete selectedUsersMsg[thisUser.id];
+                  thisUser.classList.remove("selected");
+                  startButton.style.display = (Object.keys(selectedUsersMsg).length > 0 ? "inline-block" : "none");
+                } else {
+                  selectedUsersMsg[thisUser.id] = user;
+                  thisUser.classList.add("selected");
+                  startButton.style.display = "inline-block";
+                  startButton.hidden = false;
+                }
+              });
+            });
+          }
+          // }
+        });
+      }
+    }
+  });
 }
 
 async function wrap_gp(pid) {
