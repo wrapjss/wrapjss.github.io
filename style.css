@@ -3594,7 +3594,7 @@ td {
   padding: 6px;
   font-family: inherit;
   display: block;
-  width: calc(100% - 12px);
+  width: calc(100% - 12px); /* */
   color: inherit;
 }
 

@@ -798,7 +798,7 @@ if (getParam("affiliate") != null && getLocalStore("userID") == null) {
 
 sidebarButtons.addEventListener("click", function(e) {
   let path = e.path || (e.composedPath && e.composedPath());
-  let button = path[0].closest(".sidebarButton");
+  let button = path[0].closest(".sidebarButton"); //
   if (button != null) {
     if (button.innerText == "Post") {
       if (currentPage != "home") {

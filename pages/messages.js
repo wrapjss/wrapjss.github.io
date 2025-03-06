@@ -30,7 +30,7 @@ wireframes.messages = `
 						<div class="newConvoName"></div>
 						<div class="newConvoText"></div>
 	 				</div>
-	 			</div>
+	 			</div> <!-- -- -->
 		 		<div id="dmContent">
 		 			<div id="newMessageImages"></div>
 		 			<div class="sendDMInput" placeholder="Time to Chat" contenteditable></div>
