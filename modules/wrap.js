@@ -113,7 +113,7 @@ modules.wrap.crucial = async () => {
         let startButton = findI("modalButtons" + modalID).children[0];
 
         startButton.hidden = true;
-        let selectedUsersMsg = [];
+        let selectedUsersMsg = {};
 
         tempListen(findI("searchUserInput" + modalID), "input", async function (e) {
           // if (e.key == "Enter") {
@@ -148,6 +148,11 @@ modules.wrap.crucial = async () => {
           }
           // }
         });
+
+        startButton.onclick = () => {
+          const selectedUsers = Object.values(selectedUsersMsg);
+
+        }
       }
     }
   });
