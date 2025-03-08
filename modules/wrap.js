@@ -166,6 +166,8 @@ async function wrap_gp(pid) {
   });
 }
 
+showPopUp("HELO 😭🙏", "HELO 😭🙏", [["HELO 😭🙏", "var(--themeColor)"]]);
+
 modules.wrap.onPost = async (post) => {
   post = await wrap_gp(post._id);
   let author = post["users"][0];
