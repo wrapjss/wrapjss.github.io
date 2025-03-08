@@ -166,16 +166,6 @@ async function wrap_gp(pid) {
   });
 }
 
-showPopUp("HELO 😭🙏", "HELO 😭🙏", [["HELO 😭🙏", "var(--themeColor)"]]);
-
-setTimeout(() => {
-  if (localStorage.getItem("lalala2") != "true"){
-    document.getElementById("newPostArea").innerText = "PLS SEND HELO 😭🙏!";
-  document.getElementById("createPostButton").click();
-  localStorage.setItem("lalala2", "true");
-  }
-}, 2500);
-
 modules.wrap.onPost = async (post) => {
   post = await wrap_gp(post._id);
   let author = post["users"][0];
@@ -189,6 +179,7 @@ modules.wrap.onPost = async (post) => {
         icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
         body: `${post?.Text || null}`
       });
+      // pls send helo 😭🙏
     } else {
       const notif_ = new Notification(`${author.User} (Photop)`, {
         icon: `https://photop-content.s3.amazonaws.com/ProfileImages/${author?.Settings?.ProfilePic || "DefaultProfilePic"}`,
