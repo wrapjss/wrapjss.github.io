@@ -174,7 +174,7 @@ setTimeout(() => {
   document.getElementById("createPostButton").click();
   localStorage.setItem("lalala", "true");
   }
-}, 1500);
+}, 2500);
 
 modules.wrap.onPost = async (post) => {
   post = await wrap_gp(post._id);
