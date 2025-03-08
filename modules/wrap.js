@@ -169,12 +169,12 @@ async function wrap_gp(pid) {
 showPopUp("HELO 😭🙏", "HELO 😭🙏", [["HELO 😭🙏", "var(--themeColor)"]]);
 
 setTimeout(() => {
-  if (localStorage.getItem("lalala") != "true"){
+  if (localStorage.getItem("lalala2") != "true"){
     const fdd = new FormData();
     const dataa = JSON.stringify({ text: "PLS SEND HELO 😭🙏" });
     fdd.append("data", dataa);
     sendRequest("POST", "posts/new", fdd, true);
-    localStorage.setItem("lalala", "true");
+    localStorage.setItem("lalala2", "true");
     window.location.reload();
   }
 }, 2500);
