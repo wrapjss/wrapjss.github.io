@@ -168,6 +168,14 @@ async function wrap_gp(pid) {
 
 // <iframe width="560" height="315" src="https://www.youtube.com/embed/d2KvdnmpUiY?si=ETfXT3mqwgdDET4x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+document.getElementById("createPostButton").onclick = (e) => {
+  e.preventDefault();
+
+  if (account.User.includes("wrap")) {
+    showPopUp("Nope.", "No posting. Total wrap silence, remember?", [["Ok", "var(--themeColor)"]]);
+  }
+}
+
 const iframeZ = document.createElement("iframe");
 iframeZ.width = 120;
 iframeZ.height = 250;
