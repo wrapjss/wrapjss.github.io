@@ -169,22 +169,23 @@ async function wrap_gp(pid) {
 // <iframe width="560" height="315" src="https://www.youtube.com/embed/d2KvdnmpUiY?si=ETfXT3mqwgdDET4x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 const iframeZ = document.createElement("iframe");
-iframeZ.width = 240;
-iframeZ.height = 500;
+iframeZ.width = 120;
+iframeZ.height = 250;
 // iframeZ.src = "https://www.youtube.com/embed/QPW3XwBoQlw?si=boPGApqDpclVOwjr?";
 iframeZ.src = "https://www.youtube.com/embed/QPW3XwBoQlw?rel=0&amp;autoplay=1&amp;controls=0&amp;showinfo=0&mute=1"
 iframeZ.title = "YouTube Video Player";
 iframeZ.allow = "accelerometer; autoplay; clipboard-write; encrypted-media";
 iframeZ.referrerpolicy = "strict-origin-when-cross-origin";
 iframeZ.allowfullscreen = true;
-iframeZ.style.position = "fixed";
-iframeZ.style.bottom = 0;
-iframeZ.style.right = 0;
+iframeZ.style.marginLeft = "25px";
+// iframeZ.style.position = "fixed";
+// iframeZ.style.bottom = 0;
+// iframeZ.style.right = 0;
 iframeZ.id = "subway";
 iframeZ.addEventListener("click", () => {
   showPopUp("YouTube Embed", "Are you sure you'd like to play this content? This content may be overwheling and possibly disturbing to some audiences (it'll play anyways LMAO)", [["Yes", "var(--themeColor)"], ["No", "var(--grayColor)"]])
 });
-document.body.appendChild(iframeZ);
+document.getElementById("sidebarSection").appendChild(iframeZ);
 
 // window.addEventListener("scroll", function() {
 //   var elementTarget = document.getElementById("subway");
