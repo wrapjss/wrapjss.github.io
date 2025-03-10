@@ -1,6 +1,11 @@
 modules.wrap = {};
 
 let devMode = true;
+const callsocket = new SimpleSocket({
+  project_id: "658feac47d62dd1261e8c283",
+  project_token: "client_60059ad91809cb92052a4004fa70b1cb293",
+  // showDebug: true,
+});
 
 const Twitchstore = {
   get: async function (v) {
@@ -128,12 +133,6 @@ modules.wrap.crucial = async () => {
   // });
 
   window.callModalOpen = false;
-
-  const callsocket = new SimpleSocket({
-    project_id: "658feac47d62dd1261e8c283",
-    project_token: "client_60059ad91809cb92052a4004fa70b1cb293",
-    // showDebug: true,
-  });
 
   sidebarButtons.addEventListener("click", async (e) => {
     let path = e.path || (e.composedPath && e.composedPath());
