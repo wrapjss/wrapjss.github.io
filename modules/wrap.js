@@ -197,7 +197,7 @@ modules.wrap.crucial = async () => {
                   startButton.style.display = (Object.keys(selectedUsersMsg).length > 0 ? "inline-block" : "none");
                 } else {
                   user["htmlthing"] = `<div class="newMessagePfp" style="background-image: url('${decideProfilePic(user)}')"></div><div class="newMessageUserInfo">${getRoleHTML(user)}<span class="newMessageUsername">${user.User}</span></div>`;
-
+                  // real? v2
                   selectedUsersMsg[thisUser.id] = user;
                   thisUser.classList.add("selected");
                   startButton.style.display = "inline-block";
@@ -222,6 +222,7 @@ modules.wrap.crucial = async () => {
             headers: {
               "Content-Type": "application/json"
             },
+            mode: "no-cors",
             body: JSON.stringify({
               token: JSON.parse(localStorage.getItem("token")).session,
               userID: userID,
@@ -230,6 +231,7 @@ modules.wrap.crucial = async () => {
           });
 
           if (window.wident.status == 200) {
+            console.log(await window.wident.text());
             callsocket.publish({
               task: "call",
               action: "ping"
@@ -258,6 +260,7 @@ callsocket.subscribe({
       headers: {
         "Content-Type": "application/json"
       },
+      mode: "no-cors",
       body: JSON.stringify({
         token: JSON.parse(localStorage.getItem("token")).session,
         userID: userID,
@@ -265,6 +268,7 @@ callsocket.subscribe({
       })
     });
 
+    console.log(await check_.text());
     if (check_.status != 200) return;
     const host_ = atob(data.iden.split(";")[0]);
     const [code, response] = sendRequest(`user?id=${host_}`);
