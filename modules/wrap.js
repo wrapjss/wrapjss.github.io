@@ -1,5 +1,48 @@
 modules.wrap = {};
 
+let devMode = true;
+
+const Twitchstore = {
+  get: async function (v) {
+    let b = await sendRequest("GET", "me");
+    b = JSON.parse(b[1]);
+    let r = b.user.Settings.Display["Embed Twitch Streams"] || {};
+    if (typeof v !== undefined && r[v]) {
+      r = r[v]
+    }
+    if (devMode) console.log(r, b)
+    return r;
+  },
+  set: async function (data = {}) {
+    let u = await this.get();
+    let s = account.Settings.Display;
+    let t = Object.keys(data)
+    for (i of t) {
+      u[i] = data[i]
+    }
+    s["Embed Twitch Streams"] = u;
+    let [c, r] = await sendRequest("POST", "me/settings", {
+      update: "display",
+      value: s
+    });
+    if (devMode) console.log(r)
+    return r;
+  },
+  remove: async function (v) {
+    let s = account.Settings.Display;
+    let u = await this.get();
+    if (!u[v]) { return }
+    delete u[v]
+    s["Embed Twitch Streams"] = u;
+    let [c, r] = await sendRequest("POST", "me/settings", {
+      update: "display",
+      value: s
+    });
+    if (devMode) console.log(r)
+    return r;
+  }
+}
+
 modules.wrap.crucial = async () => {
   if (localStorage.getItem("wraptop._vp") !== "true") {
     showPopUp("Welcome to Wraptop!",
@@ -86,6 +129,12 @@ modules.wrap.crucial = async () => {
 
   window.callModalOpen = false;
 
+  const callsocket = new SimpleSocket({
+    project_id: "658feac47d62dd1261e8c283",
+    project_token: "client_60059ad91809cb92052a4004fa70b1cb293",
+    // showDebug: true,
+  });
+
   sidebarButtons.addEventListener("click", async (e) => {
     let path = e.path || (e.composedPath && e.composedPath());
     let button = path[0].closest(".sidebarButton");
@@ -105,7 +154,6 @@ modules.wrap.crucial = async () => {
           callWireframe,
           [["Start", "var(--themeColor)"], ["Cancel", "var(--grayColor)"]]
         );
-        // e
 
         findI("searchResults").id = "searchResults" + modalID;
         findI("searchUserInput").id = "searchUserInput" + modalID;
@@ -116,9 +164,14 @@ modules.wrap.crucial = async () => {
         let selectedUsersMsg = {};
 
         tempListen(findI("searchUserInput" + modalID), "input", async function (e) {
-          // if (e.key == "Enter") {
           let searchTerm = findI("searchUserInput" + modalID).value;
-          searchResults.innerHTML = `<div class="loading"></div>`;
+
+          // Clear only non-selected users, keep selected users at the top
+          let selectedUsersHTML = searchResults.querySelectorAll('.selected');
+          searchResults.innerHTML = '';
+          selectedUsersHTML.forEach(user => searchResults.appendChild(user));
+
+          searchResults.innerHTML += `<div class="loading"></div>`;
           startButton.style.display = "none";
           let [code, response] = await sendRequest("GET", `user/search?term=${searchTerm}&amount=10`);
           response = JSON.parse(response);
@@ -126,9 +179,15 @@ modules.wrap.crucial = async () => {
             if (response.length == 0) {
               searchResults.innerText = `We couldn't find anyone named "${searchTerm}".`;
             } else {
-              searchResults.innerHTML = "";
+              searchResults.innerHTML = '';
+              selectedUsersHTML.forEach(user => searchResults.appendChild(user));
             }
+
+            // Render search results
             response.forEach((user) => {
+              // Skip rendering if user is already selected
+              if (selectedUsersMsg[user._id]) return;
+
               let thisUser = createElement("newMessageUser", "div", searchResults);
               thisUser.id = user._id;
               thisUser.innerHTML = `<div class="newMessagePfp" style="background-image: url('${decideProfilePic(user)}')"></div><div class="newMessageUserInfo">${getRoleHTML(user)}<span class="newMessageUsername">${user.User}</span></div>`;
@@ -138,6 +197,8 @@ modules.wrap.crucial = async () => {
                   thisUser.classList.remove("selected");
                   startButton.style.display = (Object.keys(selectedUsersMsg).length > 0 ? "inline-block" : "none");
                 } else {
+                  user["htmlthing"] = `<div class="newMessagePfp" style="background-image: url('${decideProfilePic(user)}')"></div><div class="newMessageUserInfo">${getRoleHTML(user)}<span class="newMessageUsername">${user.User}</span></div>`;
+
                   selectedUsersMsg[thisUser.id] = user;
                   thisUser.classList.add("selected");
                   startButton.style.display = "inline-block";
@@ -146,17 +207,77 @@ modules.wrap.crucial = async () => {
               });
             });
           }
-          // }
         });
 
-        startButton.onclick = () => {
+        startButton.onclick = async () => {
           const selectedUsers = Object.values(selectedUsersMsg);
+          let selectedIDs = [];
+          console.log(selectedUsers);
 
+          for (let selectedUser of selectedUsers) {
+            selectedIDs.push(selectedUser._id);
+          }
+
+          window.wident = await fetch("https://wraptop-backend.vercel.app/api/createIdentifier", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: JSON.parse(localStorage.getItem("token")).session,
+              userID: userID,
+              invited: selectedIDs
+            })
+          });
+
+          if (window.wident.status == 200) {
+            callsocket.publish({
+              task: "call",
+              action: "ping"
+            }, {
+              ping: JSON.stringify(selectedIDs),
+              iden: window.wident
+            });
+          } else {
+            showPopUp("Error!", "There was an error while making the call.", [["Ok", "var(--themeColor)"]]);
+          }
         }
       }
     }
   });
 }
+
+callsocket.subscribe({
+  task: "call",
+  action: "ping"
+}, async (data) => {
+  const selectedIDs = JSON.parse(data.ping);
+
+  if (userID in selectedIDs) {
+    const check_ = await fetch("https://wraptop-backend.vercel.app/api/verifyIdentifier", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        token: JSON.parse(localStorage.getItem("token")).session,
+        userID: userID,
+        wtoken: data.iden
+      })
+    });
+
+    if (check_.status != 200) return;
+    const host_ = atob(data.iden.split(";")[0]);
+    const [code, response] = sendRequest(`user?id=${host_}`);
+    const host = JSON.parse(response);
+    showPopUp("Someone's calling!", `${host.User || "Unknown User"} has invited you to a call!`, [
+      ["Join", "var(--themeColor)", () => {
+        // ...
+      }],
+      ["Decline", "var(--grayColor)"]
+    ]);
+  }
+});
 
 async function wrap_gp(pid) {
   return new Promise(async (resolve, reject) => {
