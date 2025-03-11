@@ -217,7 +217,7 @@ modules.wrap.crucial = async () => {
             selectedIDs.push(selectedUser._id);
           }
 
-          window.wident = await fetch("https://wraptop-backend.netlify.app/api/createIdentifier", {
+          window.wident = await fetch("https://blockdata.memblu.us.to/api/createIdentifier", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -255,7 +255,7 @@ callsocket.subscribe({
   const selectedIDs = JSON.parse(data.ping);
 
   if (userID in selectedIDs) {
-    const check_ = await fetch("https://wraptop-backend.netlify.app/api/verifyIdentifier", {
+    const check_ = await fetch("https://blockdata.memblu.us.to/api/verifyIdentifier", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
