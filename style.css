@@ -39,7 +39,7 @@ html {
   padding: 0;
   color: var(--fontColor);
   font-family: var(--mainFont);
-  font-size: 12px;
+  font-size: 18px;
   overflow-wrap: anywhere;
   background-attachment: fixed;
   background-position: bottom;
