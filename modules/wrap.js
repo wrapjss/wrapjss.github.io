@@ -216,32 +216,60 @@ modules.wrap.crucial = async () => {
           for (let selectedUser of selectedUsers) {
             selectedIDs.push(selectedUser._id);
           }
+          console.log(selectedIDs.join("~~"));
 
-          window.wident = await fetch("https://blockdata.memblu.us.to/api/createIdentifier", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            mode: "no-cors",
-            body: JSON.stringify({
-              token: JSON.parse(localStorage.getItem("token")).session,
-              userID: userID,
-              invited: selectedIDs
-            })
-          });
+          // window.wident = await fetch("https://blockdata.memblu.us.to/api/createIdentifier", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   },
+          //   mode: "no-cors",
+          //   body: JSON.stringify({
+          //     token: JSON.parse(localStorage.getItem("token")).session,
+          //     userID: userID,
+          //     invited: selectedIDs.join("~~")
+          //   })
+          // });
 
-          if (window.wident.status == 200) {
-            console.log(await window.wident.text());
-            callsocket.publish({
-              task: "call",
-              action: "ping"
-            }, {
-              ping: JSON.stringify(selectedIDs),
-              iden: window.wident
-            });
-          } else {
-            showPopUp("Error!", "There was an error while making the call.", [["Ok", "var(--themeColor)"]]);
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "https://blockdata.memblu.us.to/api/createIdentifier", false);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          const senddata = {
+            "token": JSON.parse(localStorage.getItem("token")).session,
+            "userID": userID,
+            "invited": selectedIDs.join("~~")
           }
+          xhr.send(JSON.stringify(senddata));
+
+          xhr.onload = () => {
+            const responseCode = xhr.status;
+            const response = xhr.responseText;
+
+            if (responseCode == 200) {
+              console.log(response);
+
+              callsocket.publish({
+                task: "call",
+                action: "ping"
+              }, {
+                ping: selectedIDs.join("~~"),
+                iden: response
+              });
+            }
+          }
+
+          // if (window.wident.status == 200) {
+          //   console.log(await window.wident.text());
+          //   callsocket.publish({
+          //     task: "call",
+          //     action: "ping"
+          //   }, {
+          //     ping: JSON.stringify(selectedIDs),
+          //     iden: window.wident
+          //   });
+          // } else {
+          //   showPopUp("Error!", "There was an error while making the call.", [["Ok", "var(--themeColor)"]]);
+          // }
         }
       }
     }
@@ -252,21 +280,46 @@ callsocket.subscribe({
   task: "call",
   action: "ping"
 }, async (data) => {
-  const selectedIDs = JSON.parse(data.ping);
+  const selectedIDs = data.ping.split("~~");
 
   if (userID in selectedIDs) {
-    const check_ = await fetch("https://blockdata.memblu.us.to/api/verifyIdentifier", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      mode: "no-cors",
-      body: JSON.stringify({
-        token: JSON.parse(localStorage.getItem("token")).session,
-        userID: userID,
-        wtoken: data.iden
-      })
-    });
+    // const check_ = await fetch("https://blockdata.memblu.us.to/api/verifyIdentifier", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   mode: "no-cors",
+    //   body: JSON.stringify({
+    //     token: JSON.parse(localStorage.getItem("token")).session,
+    //     userID: userID,
+    //     wtoken: data.iden
+    //   })
+    // });
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://blockdata.memblu.us.to/api/verifyIdentifier", false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    const senddata = {
+      "token": JSON.parse(localStorage.getItem("token")).session,
+      "userID": userID,
+      "wtoken": data.iden
+    };
+    xhr.send(JSON.stringify(senddata));
+
+    xhr.onload = () => {
+      const responseCode = xhr.status;
+      const response = xhr.response;
+
+      if (response !== "200 OK.") return;
+      const host_ = atob(data.iden.split(";")[0]);
+      const [code, responsee] = sendRequest(`user?id=${host_}`);
+      const host = JSON.parse(responsee);
+      showPopUp("Someone's calling!", `${host.User || "Unknown User"} has invited you to a call!`, [
+        ["Join", "var(--themeColor)", () => {
+          // ...
+        }],
+        ["Decline", "var(--grayColor)"]
+      ]);
+    }
 
     console.log(await check_.text());
     if (check_.status != 200) return;
